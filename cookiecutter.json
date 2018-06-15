@@ -1,0 +1,7 @@
+{
+    "project_name": "Name of the project",
+    "source_code_repo": [
+        "CodeCommit",
+        "Github"
+    ]
+}
