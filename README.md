@@ -27,4 +27,4 @@ After generated you should have the following files:
 License
 -------
 
-This project is licensed under the terms of the [MIT License](/LICENSE)
+This project is licensed under the terms of the [Open Source BSD-3 License](/LICENSE)
