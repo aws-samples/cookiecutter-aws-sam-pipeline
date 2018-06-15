@@ -1,6 +1,6 @@
 # Cookiecutter Pipeline for SAM based Serverless App
 
-A cookiecutter template to create a generic 3-stage Pipeline for your Serverless App based on Serverless Application Model (SAM).
+A cookiecutter template to create a generic 3-stage Pipeline for your Serverless App based on [Serverless Application Model (SAM)](https://github.com/awslabs/serverless-application-model).
 
 ![SAM Generic CI/CD Pipeline]({{cookiecutter.project_name}}/pipeline-sample.png)
 
