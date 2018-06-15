@@ -1,6 +1,6 @@
 # Cookiecutter Pipeline for SAM based Serverless App
 
-A cookiecutter template to create a generic 3-stage Pipeline for your Serverless App based on [Serverless Application Model (SAM)](https://github.com/awslabs/serverless-application-model).
+A cookiecutter template to create a generic 3-environment Pipeline for your Serverless App based on [Serverless Application Model (SAM)](https://github.com/awslabs/serverless-application-model).
 
 ![SAM Generic CI/CD Pipeline]({{cookiecutter.project_name}}/pipeline-sample.png)
 
@@ -17,7 +17,7 @@ After generated you should have the following files:
 ```bash
 ├── Pipeline-Instructions.md <-- Information how to create this Pipeline
 ├── buildspec.yaml           <-- Sample CodeBuild spec with instructions on how to update it (in case you don't have one)
-└── pipeline.yaml            <-- Cloudformation template that will generate this 3-stage pipeline
+└── pipeline.yaml            <-- Cloudformation template that will generate this 3-environment pipeline
 ```
 
 # Credits

@@ -44,7 +44,7 @@ aws ssm put-parameter \
 
 <details>
 <summary>If you don't use Python or don't want to trigger the Pipeline from the `master` branch click here...</summary>
-Before we create this 3-Stage Pipeline through Cloudformation you may want to change a couple of things to fit your environment/runtime:
+Before we create this 3-environment Pipeline through Cloudformation you may want to change a couple of things to fit your environment/runtime:
 
 * **CodeBuild** uses a `Python` build image by default and if you're not using `Python` as a runtime you can change that
     - [CodeBuild offers multiple images](https://docs.aws.amazon.com/codebuild/latest/userguide/build-env-ref-available.html) and you can  update the `Image` property under `pipeline.yaml` file accordingly
@@ -130,7 +130,7 @@ aws cloudformation describe-stacks \
 
 ## Release through the newly built Pipeline
 
-Although CodePipeline will orchestrate this 3-stage CI/CD pipeline we need to learn how to integrate our toolchain to fit the following sections:
+Although CodePipeline will orchestrate this 3-environment CI/CD pipeline we need to learn how to integrate our toolchain to fit the following sections:
 
 > **Source code**
 

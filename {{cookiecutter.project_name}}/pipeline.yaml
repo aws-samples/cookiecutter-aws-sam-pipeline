@@ -1,7 +1,7 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: >
 
-    This template generates a generic 3-stage CI/CD Pipeline for Serverless Apps that use SAM (Serverless Application Model).
+    This template generates a generic 3-environment CI/CD Pipeline for Serverless Apps that use SAM (Serverless Application Model).
 
     Charges may apply for AWS Services utilized - Below are a summary for your convenience:
 
