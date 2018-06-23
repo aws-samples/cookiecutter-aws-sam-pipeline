@@ -6,6 +6,6 @@ python:
   - "3.4"
 cache: pip
 install:
-  - pip install pytest-cookies --user
+  - pip install pytest-cookies cfn-python-lint --user
 script:
   - pytest -vv tests/

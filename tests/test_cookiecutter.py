@@ -19,31 +19,7 @@ def test_project_tree(cookies):
     assert result.project.join("pipeline-sample.png").isfile()
 
 
-def test_codecommit_content(cookies):
-    result = cookies.bake(
-        extra_context={
-            "project_name": "--pytest-cookies--",
-            "source_code_repo": "CodeCommit",
-        }
-    )
-    pipeline = result.project.join("pipeline.yaml")
-    app_content = pipeline.readlines()
-    app_content = "".join(app_content)
-
-    contents = (
-        "AWS CodeCommit",
-        "BranchName",
-        "RepositoryName",
-        "arn:aws:codecommit",
-        "CodeCommitRepositoryHttpUrl",
-        "CodeCommitRepositorySshUrl",
-    )
-
-    for content in contents:
-        assert content in app_content
-
-
-def test_pipeline_content(cookies):
+def test_codecommit_pipeline_content(cookies):
     result = cookies.bake(
         extra_context={
             "project_name": "--pytest-cookies--",
@@ -69,13 +45,19 @@ def test_pipeline_content(cookies):
         "Category: Deploy",
         "BuildArtifactAsZip",
         "SourceCodeAsZip",
+        "AWS CodeCommit",
+        "BranchName",
+        "RepositoryName",
+        "arn:aws:codecommit",
+        "CodeCommitRepositoryHttpUrl",
+        "CodeCommitRepositorySshUrl",
     )
 
     for content in contents:
         assert content in app_content
 
 
-def test_github_content(cookies):
+def test_github_pipeline_content(cookies):
     result = cookies.bake(
         extra_context={
             "project_name": "--pytest-cookies--",
