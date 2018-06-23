@@ -70,5 +70,35 @@ def test_pipeline_content(cookies):
         assert content in app_content
 
 
-# FIXME: Couldn't figure out why options aren't accepted in pytest-cookies
-# def test_github_content(cookies):
+def test_github_content(cookies):
+    result = cookies.bake(
+        extra_context={
+            "project_name": "--pytest-cookies--",
+            "source_code_repo": "Github",
+        }
+    )
+    pipeline = result.project.join("pipeline.yaml")
+    app_content = pipeline.readlines()
+    app_content = "".join(app_content)
+
+    contents = (
+        "Amazon S3",
+        "AWS CodeBuild",
+        "AWS CloudFormation",
+        "BuildArtifactsBucket",
+        "BUILD_OUTPUT_BUCKET",
+        "CodePipelineExecutionRole",
+        "Name: SourceCodeRepo",
+        "Category: Build",
+        "Category: Deploy",
+        "BuildArtifactAsZip",
+        "SourceCodeAsZip",
+        "GithubRepo",
+        "GithubToken",
+        "GithubUser",
+        "OAuthToken",
+    )
+
+    for content in contents:
+        assert content in app_content
+
