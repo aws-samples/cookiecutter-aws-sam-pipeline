@@ -16,7 +16,8 @@ HINT = "\x1b[3;33m"
 
 
 def copy_files_to(path):
-    filenames = ["buildspec.yaml", "pipeline.yaml", "Pipeline-Instructions.md"]
+    filenames = ["buildspec.yaml", "pipeline.yaml",
+                 "Pipeline-Instructions.md", "pipeline-sample.png"]
     buildspec_exists = os.path.join(path, 'buildspec.yaml')
 
     # Don't override buildspec if one exists in the current folder
