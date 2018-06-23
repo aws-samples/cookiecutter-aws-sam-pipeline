@@ -8,7 +8,7 @@ import subprocess
 def test_project_tree(cookies):
     result = cookies.bake(
         extra_context={"project_name": "--pytest-cookies--",
-                       "source_code_repo": "1"}
+                       "source_code_repo": "CodeCommit"}
     )
     assert result.exit_code == 0
     assert result.exception is None
