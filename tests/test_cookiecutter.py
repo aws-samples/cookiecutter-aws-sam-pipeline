@@ -7,7 +7,8 @@ import subprocess
 
 def test_project_tree(cookies):
     result = cookies.bake(
-        extra_context={"project_name": "--pytest-cookies--", "source_code_repo": "1"}
+        extra_context={"project_name": "--pytest-cookies--",
+                       "source_code_repo": "1"}
     )
     assert result.exit_code == 0
     assert result.exception is None
@@ -27,9 +28,10 @@ def test_codecommit_pipeline_content(cookies):
         }
     )
 
-    assert 0 == cloudformation_linting()
-
     pipeline = result.project.join("pipeline.yaml")
+
+    assert 0 == cloudformation_linting(template=pipeline)
+
     app_content = pipeline.readlines()
     app_content = "".join(app_content)
 
@@ -65,9 +67,10 @@ def test_github_pipeline_content(cookies):
         }
     )
 
-    assert 0 == cloudformation_linting()
-
     pipeline = result.project.join("pipeline.yaml")
+
+    assert 0 == cloudformation_linting(template=pipeline)
+
     app_content = pipeline.readlines()
     app_content = "".join(app_content)
 
@@ -93,7 +96,7 @@ def test_github_pipeline_content(cookies):
         assert content in app_content
 
 
-def cloudformation_linting(template="pipeline.yamll"):
+def cloudformation_linting(template="pipeline.yaml"):
     """Cloudformation linting via cfn-lint
 
     Cloudformation linting to validate against the spec
