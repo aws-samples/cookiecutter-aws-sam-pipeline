@@ -2,6 +2,8 @@
     Tests cookiecutter baking process and rendered content
 """
 
+import subprocess
+
 
 def test_project_tree(cookies):
     result = cookies.bake(
@@ -48,6 +50,9 @@ def test_pipeline_content(cookies):
             "source_code_repo": "CodeCommit",
         }
     )
+
+    assert 0 == cloudformation_linting()
+
     pipeline = result.project.join("pipeline.yaml")
     app_content = pipeline.readlines()
     app_content = "".join(app_content)
@@ -77,6 +82,9 @@ def test_github_content(cookies):
             "source_code_repo": "Github",
         }
     )
+
+    assert 0 == cloudformation_linting()
+
     pipeline = result.project.join("pipeline.yaml")
     app_content = pipeline.readlines()
     app_content = "".join(app_content)
@@ -102,3 +110,28 @@ def test_github_content(cookies):
     for content in contents:
         assert content in app_content
 
+
+def cloudformation_linting(template="pipeline.yamll"):
+    """Cloudformation linting via cfn-lint
+
+    Cloudformation linting to validate against the spec
+
+    template : str, optional
+        Cloudformation template file (the default is "pipeline.yaml", which is generated upon project baking)
+
+    Returns
+    -------
+    Int
+        Exit status code out of cfn-lint command
+
+    Raises
+    ------
+    subprocess.CalledProcessError
+        subprocess exception when executed command returns a non-0 exit status
+
+    """
+
+    cmd = "cfn-lint"
+    exec_info = subprocess.check_call([cmd, template])
+
+    return exec_info
