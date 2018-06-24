@@ -4,18 +4,32 @@
 
 import subprocess
 import os
+import pytest
 
 
-def test_project_generation_with_hooks(cookies):
+@pytest.fixture()
+def codecommit(cookies):
     result = cookies.bake(
         extra_context={"project_name": "my project",
                        "source_code_repo": "CodeCommit"}
     )
+    yield result
 
-    assert result.exit_code == 0
-    assert result.exception is None
 
-    bake_tmp_dir = os.path.dirname(result.project)
+@pytest.fixture()
+def github(cookies):
+    result = cookies.bake(
+        extra_context={"project_name": "my project",
+                       "source_code_repo": "Github"}
+    )
+    yield result
+
+
+def test_project_generation(cookies, codecommit):
+    assert codecommit.exit_code == 0
+    assert codecommit.exception is None
+
+    bake_tmp_dir = os.path.dirname(codecommit._project_dir)
 
     assert os.path.isfile(os.path.join(
         bake_tmp_dir, "buildspec.yaml"))
@@ -27,20 +41,16 @@ def test_project_generation_with_hooks(cookies):
         bake_tmp_dir, "pipeline-sample.png"))
 
 
-def test_codecommit_pipeline_content(cookies):
-    result = cookies.bake(
-        extra_context={
-            "project_name": "--pytest-cookies--",
-            "source_code_repo": "CodeCommit",
-        }
-    )
+def test_codecommit_pipeline_content(cookies, codecommit):
 
-    pipeline = result.project.join("pipeline.yaml")
+    bake_tmp_dir = os.path.dirname(codecommit._project_dir)
+    pipeline = os.path.join(bake_tmp_dir, "pipeline.yaml")
 
     assert 0 == cloudformation_linting(template=pipeline)
 
-    app_content = pipeline.readlines()
-    app_content = "".join(app_content)
+    with open(pipeline) as f:
+        pipeline_content = f.readlines()
+        pipeline_content = "".join(pipeline_content)
 
     contents = (
         "Amazon S3",
@@ -63,23 +73,16 @@ def test_codecommit_pipeline_content(cookies):
     )
 
     for content in contents:
-        assert content in app_content
+        assert content in pipeline_content
 
 
-def test_github_pipeline_content(cookies):
-    result = cookies.bake(
-        extra_context={
-            "project_name": "--pytest-cookies--",
-            "source_code_repo": "Github",
-        }
-    )
+def test_github_pipeline_content(cookies, github):
+    bake_tmp_dir = os.path.dirname(github._project_dir)
+    pipeline = os.path.join(bake_tmp_dir, "pipeline.yaml")
 
-    pipeline = result.project.join("pipeline.yaml")
-
-    assert 0 == cloudformation_linting(template=pipeline)
-
-    app_content = pipeline.readlines()
-    app_content = "".join(app_content)
+    with open(pipeline) as f:
+        pipeline_content = f.readlines()
+        pipeline_content = "".join(pipeline_content)
 
     contents = (
         "Amazon S3",
@@ -100,7 +103,7 @@ def test_github_pipeline_content(cookies):
     )
 
     for content in contents:
-        assert content in app_content
+        assert content in pipeline_content
 
 
 def cloudformation_linting(template="pipeline.yaml"):
