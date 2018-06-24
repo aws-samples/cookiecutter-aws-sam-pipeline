@@ -29,7 +29,7 @@ def test_project_generation(cookies, codecommit):
     assert codecommit.exit_code == 0
     assert codecommit.exception is None
 
-    bake_tmp_dir = os.path.dirname(codecommit.project)
+    bake_tmp_dir = os.path.dirname(codecommit._project_dir)
 
     assert os.path.isfile(os.path.join(
         bake_tmp_dir, "buildspec.yaml"))
@@ -43,7 +43,7 @@ def test_project_generation(cookies, codecommit):
 
 def test_codecommit_pipeline_content(cookies, codecommit):
 
-    bake_tmp_dir = os.path.dirname(codecommit.project)
+    bake_tmp_dir = os.path.dirname(codecommit._project_dir)
     pipeline = os.path.join(bake_tmp_dir, "pipeline.yaml")
 
     assert 0 == cloudformation_linting(template=pipeline)
@@ -77,7 +77,7 @@ def test_codecommit_pipeline_content(cookies, codecommit):
 
 
 def test_github_pipeline_content(cookies, github):
-    bake_tmp_dir = os.path.dirname(github.project)
+    bake_tmp_dir = os.path.dirname(github._project_dir)
     pipeline = os.path.join(bake_tmp_dir, "pipeline.yaml")
 
     with open(pipeline) as f:
