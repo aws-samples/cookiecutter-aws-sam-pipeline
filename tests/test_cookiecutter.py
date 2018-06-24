@@ -3,6 +3,28 @@
 """
 
 import subprocess
+import os
+
+
+def test_project_generation_with_hooks(cookies):
+    result = cookies.bake(
+        extra_context={"project_name": "my project",
+                       "source_code_repo": "CodeCommit"}
+    )
+
+    assert result.exit_code == 0
+    assert result.exception is None
+
+    bake_tmp_dir = os.path.dirname(result.project)
+
+    assert os.path.isfile(os.path.join(
+        bake_tmp_dir, "buildspec.yaml"))
+    assert os.path.isfile(os.path.join(
+        bake_tmp_dir, "pipeline.yaml"))
+    assert os.path.isfile(os.path.join(
+        bake_tmp_dir, "Pipeline-Instructions.md"))
+    assert os.path.isfile(os.path.join(
+        bake_tmp_dir, "pipeline-sample.png"))
 
 
 def test_project_tree(cookies):
