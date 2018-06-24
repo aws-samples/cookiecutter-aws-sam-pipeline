@@ -27,21 +27,6 @@ def test_project_generation_with_hooks(cookies):
         bake_tmp_dir, "pipeline-sample.png"))
 
 
-def test_project_tree(cookies):
-    result = cookies.bake(
-        extra_context={"project_name": "--pytest-cookies--",
-                       "source_code_repo": "CodeCommit"}
-    )
-    assert result.exit_code == 0
-    assert result.exception is None
-    assert result.project.basename == "--pytest-cookies--"
-    assert result.project.isdir()
-    assert result.project.join("buildspec.yaml").isfile()
-    assert result.project.join("pipeline.yaml").isfile()
-    assert result.project.join("Pipeline-Instructions.md").isfile()
-    assert result.project.join("pipeline-sample.png").isfile()
-
-
 def test_codecommit_pipeline_content(cookies):
     result = cookies.bake(
         extra_context={
