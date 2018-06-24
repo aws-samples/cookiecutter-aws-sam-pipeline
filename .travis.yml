@@ -1,9 +1,11 @@
 language: python
+virtualenv:
+  system_site_packages: true
 python:
   - "2.7"
-  - "3.6"
+  - "3.4"
 cache: pip
 install:
-  - pip install -r requirements.txt
+  - pip install pytest-cookies cfn-python-lint --user
 script:
-  - pytest --cov . --cov-report term-missing --cov-fail-under 95 -vv tests/
+  - pytest -vv tests/
