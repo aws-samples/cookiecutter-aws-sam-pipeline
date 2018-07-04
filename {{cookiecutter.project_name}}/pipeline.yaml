@@ -30,19 +30,19 @@ Parameters:
     GithubUser:
       Description: Github user where the repository lives
       Type: AWS::SSM::Parameter::Value<String>
-      Default: /service/{{cookiecutter.project_name.lower().replace(' ', '-')}}/github/user 
+      Default: /service/{{cookiecutter.project_name.lower().replace(' ', '-')}}/github/user
 {%- endif%}
 
 
 Resources:
 
- ######   #######  ##     ## ########   ######  ######## 
-##    ## ##     ## ##     ## ##     ## ##    ## ##       
-##       ##     ## ##     ## ##     ## ##       ##       
- ######  ##     ## ##     ## ########  ##       ######   
-      ## ##     ## ##     ## ##   ##   ##       ##       
-##    ## ##     ## ##     ## ##    ##  ##    ## ##       
- ######   #######   #######  ##     ##  ######  ######## 
+ ######   #######  ##     ## ########   ######  ########
+##    ## ##     ## ##     ## ##     ## ##    ## ##
+##       ##     ## ##     ## ##     ## ##       ##
+ ######  ##     ## ##     ## ########  ##       ######
+      ## ##     ## ##     ## ##   ##   ##       ##
+##    ## ##     ## ##     ## ##    ##  ##    ## ##
+ ######   #######   #######  ##     ##  ######  ########
 {%- if cookiecutter.source_code_repo == "CodeCommit" %}
     CodeRepository:
         Type: AWS::CodeCommit::Repository
@@ -59,8 +59,8 @@ Resources:
             ServerSideEncryptionConfiguration:
               - ServerSideEncryptionByDefault:
                   SSEAlgorithm: AES256
-          Tags: 
-            - 
+          Tags:
+            -
               Key: "Stack"
               Value: !Ref AWS::StackName
             -
@@ -68,13 +68,13 @@ Resources:
               Value: {{cookiecutter.project_name}}
         DeletionPolicy: Retain
 
-########  ##     ## #### ##       ########  
-##     ## ##     ##  ##  ##       ##     ## 
-##     ## ##     ##  ##  ##       ##     ## 
-########  ##     ##  ##  ##       ##     ## 
-##     ## ##     ##  ##  ##       ##     ## 
-##     ## ##     ##  ##  ##       ##     ## 
-########   #######  #### ######## ########  
+########  ##     ## #### ##       ########
+##     ## ##     ##  ##  ##       ##     ##
+##     ## ##     ##  ##  ##       ##     ##
+########  ##     ##  ##  ##       ##     ##
+##     ## ##     ##  ##  ##       ##     ##
+##     ## ##     ##  ##  ##       ##     ##
+########   #######  #### ######## ########
 
     CodeBuildProject:
         Type: AWS::CodeBuild::Project
@@ -83,40 +83,43 @@ Resources:
             Description: Build project for the {{cookiecutter.project_name}}
             Artifacts:
               Type: CODEPIPELINE
-            Environment: 
+            Environment:
                 Type: LINUX_CONTAINER
                 ComputeType: BUILD_GENERAL1_SMALL
                 Image: aws/codebuild/python:3.6.5 # More info on Images: https://docs.aws.amazon.com/codebuild/latest/userguide/build-env-ref-available.html
                 EnvironmentVariables:
-                  - 
+                  -
                     Name: BUILD_OUTPUT_BUCKET
                     Value: !Ref BuildArtifactsBucket
             Cache:
               Type: S3
               Location: !Sub ${BuildArtifactsBucket}/codebuild-cache
             ServiceRole: !GetAtt CodeBuildServiceRole.Arn
-            Source: 
+            Source:
                 Type: CODEPIPELINE
-            Tags: 
-              - 
+            Tags:
+              -
                 Key: "Stack"
                 Value: !Ref AWS::StackName
               -
                 Key: "Project"
                 Value: {{cookiecutter.project_name}}
 
-########  #### ########  ######## ##       #### ##    ## ######## 
-##     ##  ##  ##     ## ##       ##        ##  ###   ## ##       
-##     ##  ##  ##     ## ##       ##        ##  ####  ## ##       
-########   ##  ########  ######   ##        ##  ## ## ## ######   
-##         ##  ##        ##       ##        ##  ##  #### ##       
-##         ##  ##        ##       ##        ##  ##   ### ##       
-##        #### ##        ######## ######## #### ##    ## ######## 
+########  #### ########  ######## ##       #### ##    ## ########
+##     ##  ##  ##     ## ##       ##        ##  ###   ## ##
+##     ##  ##  ##     ## ##       ##        ##  ####  ## ##
+########   ##  ########  ######   ##        ##  ## ## ## ######
+##         ##  ##        ##       ##        ##  ##  #### ##
+##         ##  ##        ##       ##        ##  ##   ### ##
+##        #### ##        ######## ######## #### ##    ## ########
+
+    PipelineNotifications:
+        Type: AWS::SNS::Topic
 
     Pipeline:
         Type: AWS::CodePipeline::Pipeline
         Properties:
-            ArtifactStore: 
+            ArtifactStore:
                 Location: !Ref BuildArtifactsBucket
                 Type: S3
             Name: {{cookiecutter.project_name.lower().replace(' ', '-')}}
@@ -239,6 +242,9 @@ Resources:
                         Owner: AWS
                         Provider: Manual
                         Version: "1"
+                      Configuration:
+                        NotificationArn: !Ref PipelineNotifications
+                        CustomData: Approval or Reject this change after running Exploratory Tests
                       RunOrder: 1
                     - Name: CreateChangeSet
                       ActionTypeId:
@@ -272,13 +278,13 @@ Resources:
                       RunOrder: 3
 
 
-####    ###    ##     ## 
- ##    ## ##   ###   ### 
- ##   ##   ##  #### #### 
- ##  ##     ## ## ### ## 
- ##  ######### ##     ## 
- ##  ##     ## ##     ## 
-#### ##     ## ##     ## 
+####    ###    ##     ##
+ ##    ## ##   ###   ###
+ ##   ##   ##  #### ####
+ ##  ##     ## ## ### ##
+ ##  ######### ##     ##
+ ##  ##     ## ##     ##
+#### ##     ## ##     ##
 
     CodeBuildServiceRole:
         Type: AWS::IAM::Role
@@ -286,7 +292,7 @@ Resources:
             AssumeRolePolicyDocument:
                 Version: '2012-10-17'
                 Statement:
-                  - Action: 
+                  - Action:
                       - 'sts:AssumeRole'
                     Effect: Allow
                     Principal:
@@ -298,7 +304,7 @@ Resources:
                   PolicyDocument:
                     Version: '2012-10-17'
                     Statement:
-                      - 
+                      -
                         Effect: Allow
                         Action:
                           - 'logs:CreateLogGroup'
@@ -311,9 +317,9 @@ Resources:
                   PolicyDocument:
                     Version: '2012-10-17'
                     Statement:
-                      - 
+                      -
                         Effect: Allow
-                        Action: 
+                        Action:
                           - 's3:GetObject'
                           - 's3:GetObjectVersion'
                           - 's3:PutObject'
@@ -350,12 +356,12 @@ Resources:
             AssumeRolePolicyDocument:
                 Version: '2012-10-17'
                 Statement:
-                  - 
-                    Action: 
+                  -
+                    Action:
                         - 'sts:AssumeRole'
                     Effect: Allow
                     Principal:
-                      Service: 
+                      Service:
                         - codepipeline.amazonaws.com
             Path: /
             Policies:
@@ -363,7 +369,7 @@ Resources:
                   PolicyDocument:
                     Version: '2012-10-17'
                     Statement:
-                        - 
+                        -
                             Effect: Allow
                             Action:
                                 - 'iam:PassRole'
@@ -375,12 +381,12 @@ Resources:
                   PolicyDocument:
                     Version: '2012-10-17'
                     Statement:
-                      - 
+                      -
                         Effect: Allow
                         Action: 's3:*'
                         Resource: !Sub 'arn:aws:s3:::${BuildArtifactsBucket}/*'
 {%- if cookiecutter.source_code_repo == "CodeCommit" %}
-                      - 
+                      -
                         Effect: Allow
                         Action: 'codecommit:*'
                         Resource: !Sub 'arn:aws:codecommit:${AWS::Region}:${AWS::AccountId}:${CodeRepository.Name}'
@@ -389,16 +395,16 @@ Resources:
                   PolicyDocument:
                     Version: '2012-10-17'
                     Statement:
-                      - 
+                      -
                         Effect: Allow
-                        Action: 
+                        Action:
                           - 'codebuild:StartBuild'
                           - 'codebuild:BatchGetBuilds'
-                        Resource: 
+                        Resource:
                           - !Sub 'arn:aws:codebuild:${AWS::Region}:${AWS::AccountId}:project/${CodeBuildProject}'
-                      - 
+                      -
                         Effect: Allow
-                        Action: 
+                        Action:
                           - 'cloudformation:CreateStack'
                           - 'cloudformation:DescribeStacks'
                           - 'cloudformation:DeleteStack'
@@ -410,9 +416,18 @@ Resources:
                           - 'cloudformation:SetStackPolicy'
                           - 'cloudformation:SetStackPolicy'
                           - 'cloudformation:ValidateTemplate'
-                        Resource: 
+                        Resource:
                           - !Sub 'arn:aws:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/{{cookiecutter.project_name.lower().replace(' ', '-')}}*/*'
                           - !Sub 'arn:aws:cloudformation:${AWS::Region}:aws:transform/Serverless-2016-10-31'
+                  - PolicyName: SNSAccess
+                    PolicyDocument:
+                      Version: '2012-10-17'
+                      Statement:
+                        -
+                          Effect: Allow
+                          Action:
+                            - 'sns:Publish'
+                          Resource: !Ref PipelineNotifications
 
 
 Outputs:
@@ -434,7 +449,7 @@ Outputs:
       Description: AWS CodeCommit Git repository
       Value: !GetAtt CodeRepository.CloneUrlSsh
 {%- endif %}
-  
+
     BuildArtifactS3Bucket:
       Description: Amazon S3 Bucket for Pipeline and Build artifacts
       Value: !Ref BuildArtifactsBucket
@@ -458,3 +473,7 @@ Outputs:
     CodePipelineIAMRole:
       Description: CodePipeline IAM Role
       Value: !GetAtt CodePipelineExecutionRole.Arn
+
+    PipelineNotificationTopic:
+      Description: SNS Topic used to notify a approval is required
+      Value: !Ref PipelineNotifications
