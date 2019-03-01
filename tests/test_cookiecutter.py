@@ -97,6 +97,7 @@ def test_github_pipeline_content(cookies, github):
         "BuildArtifactAsZip",
         "SourceCodeAsZip",
         "GithubRepo",
+        "GithubTokenSecretArnSuffix",
         "GithubUser",
         "OAuthToken",
     )

@@ -21,6 +21,11 @@ Parameters:
       Type: AWS::SSM::Parameter::Value<String>
       Default: /service/{{cookiecutter.project_name.lower().replace(' ', '-')}}/github/repo
 
+    GithubTokenSecretArnSuffix:
+      Description: ARN Suffix for the Github OAuth Token with full permissions on admin:repo_hook and repo
+      Type: AWS::SSM::Parameter::Value<String>
+      Default: /service/{{cookiecutter.project_name.lower().replace(' ', '-')}}/github/token_arn_suffix
+
     GithubUser:
       Description: Github user where the repository lives
       Type: AWS::SSM::Parameter::Value<String>
@@ -321,6 +326,7 @@ Resources:
                         Effect: Allow
                         Action: 'ssm:GetParameters'
                         Resource: '*'
+{%- if cookiecutter.source_code_repo == "Github" %}
                 - PolicyName: CodeBuildSecretsManager
                   PolicyDocument:
                     Version: '2012-10-17'
@@ -328,8 +334,11 @@ Resources:
                       -
                         Effect: Allow
                         Action: 'secretsmanager:GetSecretValue'
-                        Resource: '*'
-
+                        Resource:
+                          Fn::Sub:
+                            - 'arn:aws:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:${SecretNameSuffix}'
+                            - { SecretNameSuffix: !Ref GithubTokenSecretArnSuffix }
+{%- endif %}
 
     CloudFormationExecutionRole:
       Type: AWS::IAM::Role
