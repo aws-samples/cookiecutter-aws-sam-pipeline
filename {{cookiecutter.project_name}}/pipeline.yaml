@@ -21,12 +21,6 @@ Parameters:
       Type: AWS::SSM::Parameter::Value<String>
       Default: /service/{{cookiecutter.project_name.lower().replace(' ', '-')}}/github/repo
 
-    GithubToken:
-      Description: Github OAuth Token with full permissions on admin:repo_hook and repo
-      Type: AWS::SSM::Parameter::Value<String>
-      NoEcho: true
-      Default: /service/{{cookiecutter.project_name.lower().replace(' ', '-')}}/github/token
-
     GithubUser:
       Description: Github user where the repository lives
       Type: AWS::SSM::Parameter::Value<String>
@@ -136,7 +130,7 @@ Resources:
                         Owner: !Ref GithubUser
                         Repo: !Ref GithubRepo
                         Branch: master
-                        OAuthToken: !Ref GithubToken
+                        OAuthToken: '{{resolve:secretsmanager:GithubToken::::}}'
                       OutputArtifacts:
                         - Name: SourceCodeAsZip
                       RunOrder: 1
@@ -326,6 +320,14 @@ Resources:
                       -
                         Effect: Allow
                         Action: 'ssm:GetParameters'
+                        Resource: '*'
+                - PolicyName: CodeBuildSecretsManager
+                  PolicyDocument:
+                    Version: '2012-10-17'
+                    Statement:
+                      -
+                        Effect: Allow
+                        Action: 'secretsmanager:GetSecretValue'
                         Resource: '*'
 
 

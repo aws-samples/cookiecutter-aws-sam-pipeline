@@ -24,11 +24,9 @@ aws ssm put-parameter \
     --type "String" \
     --value "GITHUB_REPO_NAME"
 
-aws ssm put-parameter \
-    --name "/service/{{cookiecutter.project_name.lower().replace(' ', '-')}}/github/token" \
+aws secretsmanager create-secret --name GithubToken \
     --description "Github Token for Cloudformation Stack {{cookiecutter.project_name.lower().replace(' ', '-')}}-pipeline" \
-    --type "String" \
-    --value "TOKEN"
+    --secret-string "TOKEN"
 
 aws ssm put-parameter \
     --name "/service/{{cookiecutter.project_name.lower().replace(' ', '-')}}/github/user" \
