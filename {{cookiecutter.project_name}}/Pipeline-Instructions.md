@@ -6,7 +6,7 @@
 
 ## Requirements
 
-* AWS CLI already configured with Administrator access 
+* AWS CLI already configured with Administrator access
     - Alternatively, you can use a [Cloudformation Service Role with Admin access](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-iam-servicerole.html)
 {%- if cookiecutter.source_code_repo == "Github" %}
 * [Github Personal Token](https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line/) with full permissions on **admin:repo_hook and repo**
@@ -24,11 +24,17 @@ aws ssm put-parameter \
     --type "String" \
     --value "GITHUB_REPO_NAME"
 
-aws ssm put-parameter \
-    --name "/service/{{cookiecutter.project_name.lower().replace(' ', '-')}}/github/token" \
+aws secretsmanager create-secret --name GithubToken \
     --description "Github Token for Cloudformation Stack {{cookiecutter.project_name.lower().replace(' ', '-')}}-pipeline" \
+    --secret-string "TOKEN"
+
+ARN=$(aws secretsmanager list-secrets --query 'SecretList[?Name==`GithubToken`].{arn:ARN}' --output text)
+
+aws ssm put-parameter \
+    --name "/service/{{cookiecutter.project_name.lower().replace(' ', '-')}}/github/token_arn_suffix" \
+    --description "Secrets Manager ARN Suffix for the Github OAuth Token for Cloudformation Stack {{cookiecutter.project_name.lower().replace(' ', '-')}}-pipeline" \
     --type "String" \
-    --value "TOKEN"
+    --value "${ARN##*:}"
 
 aws ssm put-parameter \
     --name "/service/{{cookiecutter.project_name.lower().replace(' ', '-')}}/github/user" \
@@ -54,12 +60,12 @@ Before we create this 3-environment Pipeline through Cloudformation you may want
         Type: AWS::CodeBuild::Project
         Properties:
             ...
-            Environment: 
+            Environment:
                 Type: LINUX_CONTAINER
                 ComputeType: BUILD_GENERAL1_SMALL
                 Image: aws/codebuild/python:3.6.5 # More info on Images: https://docs.aws.amazon.com/codebuild/latest/userguide/build-env-ref-available.html
                 EnvironmentVariables:
-                  - 
+                  -
                     Name: BUILD_OUTPUT_BUCKET
                     Value: !Ref BuildArtifactsBucket
 ...
@@ -140,13 +146,13 @@ All you need to do here is to initialize a local `git repository` for your exist
 git init
 ```
 
-Next, add a new Git Origin to connect your local repository to the remote repository: 
+Next, add a new Git Origin to connect your local repository to the remote repository:
 
 {%- if cookiecutter.source_code_repo == "Github" %}
 * [Git Instructions for HTTPS access](https://help.github.com/articles/adding-a-remote/)
 {%- else %}
-* [Git Instructions for SSH access](https://docs.aws.amazon.com/codecommit/latest/userguide/setting-up-ssh-unixes.html) 
-* [Git Instructions for HTTPS access](https://docs.aws.amazon.com/codecommit/latest/userguide/setting-up-https-unixes.html) 
+* [Git Instructions for SSH access](https://docs.aws.amazon.com/codecommit/latest/userguide/setting-up-ssh-unixes.html)
+* [Git Instructions for HTTPS access](https://docs.aws.amazon.com/codecommit/latest/userguide/setting-up-https-unixes.html)
 {%- endif %}
 
 > **Build steps**
@@ -160,7 +166,7 @@ Open up `buildspec.yaml` using your favourite editor and customize it to your ne
 The Pipeline will be listening for new git commits pushed to the `master` branch (unless you changed), therefore all we need to do now is to commit to master and watch our pipeline run through:
 
 ```bash
-git add . 
+git add .
 git commit -m "Kicking the tires of my first CI/CD pipeline"
 git push origin master
 ```
