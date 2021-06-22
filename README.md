@@ -1,7 +1,5 @@
 # Cookiecutter Pipeline for SAM based Serverless App
 
-![CI Build Status](https://travis-ci.org/aws-samples/cookiecutter-aws-sam-pipeline.svg?branch=master)
-
 A cookiecutter template to create a generic 3-environment Pipeline for your Serverless App based on [Serverless Application Model (SAM)](https://github.com/awslabs/serverless-application-model).
 
 ![SAM Generic CI/CD Pipeline]({{cookiecutter.project_name}}/pipeline-sample.png)
@@ -22,11 +20,10 @@ After generated you should have the following files:
 └── pipeline.yaml            <-- Cloudformation template that will generate this 3-environment pipeline
 ```
 
-# Credits
+## Credits
 
 * This project has been generated with [Cookiecutter](https://github.com/audreyr/cookiecutter)
 
-License
--------
+## License
 
 This project is licensed under the terms of the [Open Source BSD-3 License](/LICENSE)
