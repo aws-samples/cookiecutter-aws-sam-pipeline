@@ -136,7 +136,7 @@ Resources:
                       Configuration:
                         Owner: !Ref GithubUser
                         Repo: !Ref GithubRepo
-                        Branch: master
+                        Branch: main
                         OAuthToken: !Ref GithubToken
                       OutputArtifacts:
                         - Name: SourceCodeAsZip
@@ -148,7 +148,7 @@ Resources:
                         Version: "1"
                       Configuration:
                         RepositoryName: !GetAtt CodeRepository.Name
-                        BranchName: master
+                        BranchName: main
                       OutputArtifacts:
                         - Name: SourceCodeAsZip
                       RunOrder: 1
