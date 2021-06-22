@@ -2,11 +2,11 @@
 
 A cookiecutter template to create a generic 3-environment Pipeline for your Serverless App based on [Serverless Application Model (SAM)](https://github.com/awslabs/serverless-application-model).
 
-![SAM Generic CI/CD Pipeline]({{cookiecutter.project_name}}/pipeline-sample.png)
+![SAM Generic CI/CD Pipeline]({{cookiecutter.project_name}}/pipeline.png)
 
 ## Requirements
 
-* [AWS SAM CLI](https://github.com/awslabs/aws-sam-cli) 
+* [AWS SAM CLI](https://github.com/awslabs/aws-sam-cli)
 
 ## Usage
 
