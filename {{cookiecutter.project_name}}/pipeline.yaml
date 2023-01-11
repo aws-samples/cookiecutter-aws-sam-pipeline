@@ -87,7 +87,7 @@ Resources:
             Environment: 
                 Type: LINUX_CONTAINER
                 ComputeType: BUILD_GENERAL1_SMALL
-                Image: aws/codebuild/python:3.6.5 # More info on Images: https://docs.aws.amazon.com/codebuild/latest/userguide/build-env-ref-available.html
+                Image: aws/codebuild/amazonlinux2-x86_64-standard:2.0 # More info on Images: https://docs.aws.amazon.com/codebuild/latest/userguide/build-env-ref-available.html
                 EnvironmentVariables:
                   - 
                     Name: BUILD_OUTPUT_BUCKET
@@ -136,7 +136,7 @@ Resources:
                       Configuration:
                         Owner: !Ref GithubUser
                         Repo: !Ref GithubRepo
-                        Branch: master
+                        Branch: main
                         OAuthToken: !Ref GithubToken
                       OutputArtifacts:
                         - Name: SourceCodeAsZip
@@ -148,7 +148,7 @@ Resources:
                         Version: "1"
                       Configuration:
                         RepositoryName: !GetAtt CodeRepository.Name
-                        BranchName: master
+                        BranchName: main
                       OutputArtifacts:
                         - Name: SourceCodeAsZip
                       RunOrder: 1

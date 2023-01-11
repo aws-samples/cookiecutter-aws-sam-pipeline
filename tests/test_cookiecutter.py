@@ -38,7 +38,7 @@ def test_project_generation(cookies, codecommit):
     assert os.path.isfile(os.path.join(
         bake_tmp_dir, "Pipeline-Instructions.md"))
     assert os.path.isfile(os.path.join(
-        bake_tmp_dir, "pipeline-sample.png"))
+        bake_tmp_dir, "pipeline.png"))
 
 
 def test_codecommit_pipeline_content(cookies, codecommit):

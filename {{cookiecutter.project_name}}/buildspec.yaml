@@ -1,57 +1,105 @@
-
-version: 0.2
+version: 0.2 
 # Buildspec Reference Doc: https://docs.aws.amazon.com/codebuild/latest/userguide/build-spec-ref.html#build-spec-ref-syntax
+# run-as: Linux-user-name
 
-#################################
-# Runtime Environment Variables #
-#################################
-
-# env:
+# env: # https://docs.aws.amazon.com/codebuild/latest/userguide/build-spec-ref.html#build-spec.env
+#   shell: shell-tag
 #   variables:
 #     key: "value"
 #     key: "value"
 #   parameter-store:
 #     key: "value"
 #     key: "value"
+#   exported-variables:
+#     - variable
+#     - variable
+#   secrets-manager:
+#     key: secret-id:json-key:version-stage:version-id
+#   git-credential-helper: no | yes
 
+# proxy: # https://docs.aws.amazon.com/codebuild/latest/userguide/build-spec-ref.html#build-spec.proxy
+#   upload-artifacts: no | yes
+#   logs: no | yes
+
+# batch: # https://docs.aws.amazon.com/codebuild/latest/userguide/batch-build-buildspec.html#build-spec.batch
+  # fast-fail: false | true
+  # build-list:
+  # build-matrix:
+  # build-graph:
+        
 phases:
   install:
-    commands:
-      # Use Install phase to install packages or any pre-reqs you may need throughout the build (e.g. dev deps, security checks, etc.)
-      # - echo "[Install phase]"
-  pre_build:
-    commands:
-      # Use Pre-Build phase to run tests, install any code deps or any other customization before build
-      # - echo "[Pre-Build phase]"
+    # run-as: Linux-user-name
+    # on-failure: ABORT | CONTINUE
+    runtime-versions:
+      python: 3.8
+    #   runtime: version
+    # commands:
+    #   - command
+    #   - command
+    # finally:
+    #   - command
+    #   - command
+  # pre_build:
+    # run-as: Linux-user-name
+    # on-failure: ABORT | CONTINUE
+    # commands:
+    #   - command
+    #   - command
+    # finally:
+    #   - command
+    #   - command
   build:
+    # run-as: Linux-user-name
+    on-failure: ABORT
     commands:
-      # Use Build phase to build your artifacts (compile, package, etc.)
-      # - echo "[Build phase]"
-      # We package the SAM template and create `packaged.yaml` file that will be used in our pipeline for deployment
-      ## Here we separate Build from Deployment and segregate permissions for different steps
       - echo "Starting SAM packaging `date` in `pwd`"
       - aws cloudformation package --template-file template.yaml --s3-bucket $BUILD_OUTPUT_BUCKET --output-template-file packaged.yaml
+    # finally:
+    #   - command
+    #   - command
   post_build:
+    # run-as: Linux-user-name
+    # on-failure: ABORT | CONTINUE
     commands:
-      # Use Post Build for notifications, git tags and any further customization after build
-      # - echo "[Post-Build phase]"
       - echo "SAM packaging completed on `date`"
+    # finally:
+    #   - command
+    #   - command
 
-##################################
-# Build Artifacts to be uploaded #
-##################################
-
-artifacts:
+# reports: # https://docs.aws.amazon.com/codebuild/latest/userguide/build-spec-ref.html#build-spec.reports
+#   report-group-name-or-arn:
+#     files:
+#       - location
+#       - location
+#     base-directory: location
+#     discard-paths: no | yes
+#     file-format: report-format
+artifacts: # https://docs.aws.amazon.com/codebuild/latest/userguide/build-spec-ref.html#build-spec.artifacts
   files:
-    # list of local files relative to this build environment that will be added to the final artifact (zip)
     - packaged.yaml
+    # - location
+  name: artifact-name
   discard-paths: yes
-
-#########################################
-# Cache local files for subsequent runs #
-#########################################
-
-cache:
-  paths:
-  # List of path that CodeBuild will upload to S3 Bucket and use in subsequent runs to speed up Builds
-  # - '/root/.cache/pip'
+  # base-directory: location
+  # exclude-paths: excluded paths
+  # enable-symlinks: no | yes
+  # s3-prefix: prefix
+  # secondary-artifacts:
+  #   artifactIdentifier:
+  #     files:
+  #       - location
+  #       - location
+  #     name: secondary-artifact-name
+  #     discard-paths: no | yes
+  #     base-directory: location
+  #   artifactIdentifier:
+  #     files:
+  #       - location
+  #       - location
+  #     discard-paths: no | yes
+  #     base-directory: location
+# cache: # https://docs.aws.amazon.com/codebuild/latest/userguide/build-spec-ref.html#build-spec.cache
+#   paths:
+#     # - path
+#     # - path

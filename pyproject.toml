@@ -5,17 +5,17 @@ description = "A cookiecutter template to create a generic 3-environment Pipelin
 authors = ["Amazon Web Services"]
 
 [tool.poetry.dependencies]
-python = "^3.6"
+python = "^3.8"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.4.2"
 pytest-mock = "^3.1.0"
 boto3 = "^1.13.19"
 aws-sam-translator = "^1.24.0"
-cookiecutter = "^1.7.2"
 cfn-lint = "^0.32.1"
-pytest-cookies = "^0.5.1"
+cookiecutter = "^2.1.1"
+pytest-cookies = "^0.6.1"
 
 [build-system]
-requires = ["poetry>=0.12"]
+requires = ["poetry>=1.1.6"]
 build-backend = "poetry.masonry.api"
